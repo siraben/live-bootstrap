@@ -1,0 +1,5 @@
+        opc = 0xc0 | (opc << 3);
+        gv2(RC_INT, RC_RCX);
+        r = vtop[-1].r;
+        orex(ll, r, 0, 0xd3); /* shl/shr/sar %cl, r */
+        o(opc | REG_VALUE(r));

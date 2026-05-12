@@ -1,0 +1,16 @@
+        opc = 0xc0 | (opc << 3);
+        if (cc) {
+            /* constant case */
+            vswap();
+            r = gv(RC_INT);
+            vswap();
+            orex(ll, r, 0, 0xc1); /* shl/shr/sar $xxx, r */
+            o(opc | REG_VALUE(r));
+            g(vtop->c.i & (ll ? 63 : 31));
+        } else {
+            /* we generate the shift in ecx */
+            gv2(RC_INT, RC_RCX);
+            r = vtop[-1].r;
+            orex(ll, r, 0, 0xd3); /* shl/shr/sar %cl, r */
+            o(opc | REG_VALUE(r));
+        }
