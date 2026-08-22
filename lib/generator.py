@@ -321,14 +321,22 @@ this script the next time")
                 options = []
             random.shuffle(options)
             for option in options:
-                if do_download(option):
-                    done = True
-                    break
+                try:
+                    if do_download(option):
+                        done = True
+                        break
+                except requests.RequestException as err:
+                    print(f"Download failed from {option}: {err}")
 
             if not done:
-                if url == "_" or not do_download(url):
-                    raise requests.RequestException(f"Unable to download {url} from ",
-                                                    "any mirror or original")
+                try:
+                    failed = url == "_" or not do_download(url)
+                except requests.RequestException as err:
+                    print(f"Download failed from {url}: {err}")
+                    failed = True
+                if failed:
+                    raise requests.RequestException(
+                        f"Unable to download {url} from any mirror or original")
 
         return abs_file_name
 
@@ -337,7 +345,7 @@ this script the next time")
         for line in self.source_manifest:
             try:
                 path = self.download_file(line[2], line[1], line[3])
-            except requests.HTTPError:
+            except requests.RequestException:
                 print(traceback.format_exc())
         for line in self.source_manifest:
             path = os.path.join(line[1], line[3])
