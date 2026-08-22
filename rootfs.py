@@ -145,7 +145,7 @@ def main():
         return count
 
     if check_types() > 1:
-        raise ValueError("No more than one of qemu, chroot, bwrap, bare metal"
+        raise ValueError("No more than one of qemu, chroot, bwrap, bare metal "
                          "may be used.")
     if check_types() == 0:
         raise ValueError("One of qemu, chroot, bwrap, or bare metal must be selected.")

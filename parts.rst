@@ -26,7 +26,7 @@ If chroot or bwrap is specified or if a pre-existing kernel is provided then we 
 hex0
 ====
 
-``hex0`` is fairly trivial to implement and for each pair of hexadecimals characters it outputs a byte. We have also added two types of line comments (``#`` and ``;``) to create a well commented lines like:
+``hex0`` is fairly trivial to implement and for each pair of hexadecimal characters it outputs a byte. We have also added two types of line comments (``#`` and ``;``) to create well commented lines like:
 
 .. code:: scheme
 
@@ -183,7 +183,7 @@ The following directives are supported:
   live bootstrap system.
 * ``define``, defines a variable evaluated from other constants/variables.
 * ``jump``, moves into a new rootfs/kernel using a custom script.
-* ``uninstall``, removes a previously built package for file.
+* ``uninstall``, removes a previously built package or file.
 
 checksum-transcriber 1.0
 ========================
@@ -255,7 +255,7 @@ fiwix 1.5.0-lb1
 If the kernel bootstrap option is enabled then the Fiwix kernel is built next.
 This is a Linux 2.0 clone which is much simpler to understand and build than
 Linux. This version of Fiwix is an intermediate release on top of 1.5.0 that
-contains many modifications and enhancements to support live-boostrap.
+contains many modifications and enhancements to support live-bootstrap.
 
 lwext4 1.0.0-lb1
 ================
@@ -263,7 +263,7 @@ lwext4 1.0.0-lb1
 If the kernel bootstrap option is enabled then `lwext4 <https://github.com/gkostka/lwext4>`
 is built next. This is a library for creating ext2/3/4 file systems from user land.
 This is combined with a program called ``make_fiwix_initrd.c`` which creates
-and populates an ext2 files system which Fiwix uses for an initial ram drive (initrd).
+and populates an ext2 file system which Fiwix uses for an initial ram drive (initrd).
 This file system contains all of the files necessary to build Linux.
 
 kexec-fiwix
@@ -285,7 +285,7 @@ patch 2.5.9
 ``patch`` is a very useful tool at this stage, allowing us to make
 significantly more complex edits, including just changes to lines.
 
-gzip 1.2.5
+gzip 1.2.4
 ==========
 
 ``gzip`` is the most common compression format used for software source
@@ -617,7 +617,7 @@ autoconf macros to make it build with ``autoconf-2.53``.
 autoconf 2.54
 =============
 
-Never version of ``autoconf``.
+Newer version of ``autoconf``.
 
 autoconf 2.55
 =============
@@ -745,7 +745,7 @@ musl 1.2.5
 GCC can build the latest as of the time of writing musl version.
 
 We also don't need any of the TCC patches that we used before.
-To accomodate Fiwix, there are patches to avoid syscalls set_thread_area and clone.
+To accommodate Fiwix, there are patches to avoid syscalls set_thread_area and clone.
 
 Linux headers 4.14.341-openela
 ==============================
@@ -800,7 +800,7 @@ in ``.tar.lz`` format. ``ed`` is used by ``bc`` build scripts.
 bc 1.08.1
 =========
 
-``bc`` is a console based calculator that is sometime used in scripts. We need ``bc``
+``bc`` is a console based calculator that is sometimes used in scripts. We need ``bc``
 to rebuild some Linux kernel headers.
 
 kexec-linux
@@ -927,7 +927,7 @@ Now that we have a proper interactive shell available, open another interactive
 console (only in interactive mode), this time accessible using Ctrl+Shift+F3, since
 Ctrl+Shift+F2 is already occupied by our previous console, running the old Bash.
 
-xz 5.4.1
+xz 5.6.4
 ========
 
 XZ Utils is a set of free software command-line lossless data compressors,
@@ -995,7 +995,7 @@ The GNU Multiple Precision Floating-Point Reliable Library (GNU MPFR) is a libra
 for arbitrary-precision binary floating-point computation with correct rounding,
 based on GNU Multi-Precision Library.
 
-mpc 3.2.1
+mpc 1.2.1
 =========
 
 GNU MPC is a library for multiprecision complex arithmetic with exact rounding based
@@ -1155,8 +1155,8 @@ perl 5.42.0
 
 5.42 is the latest version of Perl! The Perl bootstrap is complete.
 
-openssl 3.0.13
-==============
+openssl 3.6.0
+=============
 
 OpenSSL is a C library for secure communications/cryptography.
 
@@ -1165,7 +1165,7 @@ We do not use the latest 3.3.0 release because it causes lockups in curl.
 ca-certificates 3.119.1
 =======================
 
-Install TLS root certificates from nss. This will allows us to use HTTPS for downloads
+Install TLS root certificates from nss. This will allow us to use HTTPS for downloads
 once curl is rebuilt against OpenSSL.
 
 curl 8.17.0
@@ -1257,7 +1257,7 @@ Texinfo is a typesetting syntax used for generating documentation. We can now us
 ``makeinfo`` script to convert ``.texi`` files into ``.info`` documentation format.
 
 libffi 3.5.2
-===========
+============
 
 The libffi library provides a portable, high level programming interface to various
 calling conventions.
@@ -1374,7 +1374,7 @@ We use ``guile-psyntax-bootstrapping`` project on Guile 3.0.7 to bootstrap
 Guile's ``psyntax.pp`` without relying on pre-expanded code. This is then
 transplanted into Guile 3.0.11.
 
-which 2.21
+which 2.23
 ==========
 
 ``which`` shows the full path of (shell) commands. It mostly duplicates
@@ -1462,7 +1462,7 @@ which expects either glibc or libbsd.
 shadow 4.14.3
 =============
 
-shadow provides a variety of command line utilites to work with users and
+shadow provides a variety of command line utilities to work with users and
 groups, avoiding the need for manual modification of ``/etc/passwd`` and
 ``/etc/group``. This allows unprivileged users to be created by, or for,
 post-bootstrap build systems.

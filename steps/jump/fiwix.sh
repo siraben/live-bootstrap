@@ -7,7 +7,7 @@
 set -ex
 
 # Build the ext2 image
-# 1392640 = 1360 MB
+# 1381376 = 1349 MB
 make_fiwix_initrd -s 1381376 /boot/fiwix.ext2
 
 # Boot Fiwix

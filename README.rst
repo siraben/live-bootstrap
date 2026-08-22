@@ -30,7 +30,7 @@ preparations! This is a currently unsolved problem.*)
 Without using Python:
 
 0. Choose a mirror as detailed above. (You will input this later, instead of
-   passing it to ``rootfs.py```).
+   passing it to ``rootfs.py``).
 1. ``git clone https://github.com/fosslinux/live-bootstrap``
 2. ``git submodule update --init --recursive``
 3. Consider whether you are going to run this in a chroot, in QEMU, or on bare
@@ -44,17 +44,18 @@ Without using Python:
       * All other files in ``seed`` into that directory.
       * ``steps/`` and ``distfiles/`` into that directory.
 
-        * At least all files listed in ``steps/pre-network-sources`` must be
-          copied in. All other files will be obtained from the network.
+        * At least all files listed in ``sources`` files for ``build:`` steps
+          manifested before ``improve: get_network`` must be copied in. All
+          other files will be obtained from the network.
       * Run ``/bootstrap-seeds/POSIX/x86/kaem-optional-seed`` in the chroot.
         (Eg, ``chroot rootfs /bootstrap-seeds/POSIX/x86/kaem-optional-seed``).
    b. **QEMU:** Create two blank disk images.
 
       * Generate ``builder-hex0-x86-stage1.img`` from hex0 source:
 
-        ``sed 's/[;#].*$//g' builder-hex0/builder-hex0-x86-stage1-hex0 | xxd -r -p``
+        ``sed 's/[;#].*$//g' builder-hex0/builder-hex0-x86-stage1.hex0 | xxd -r -p``
       * On the first image, write ``builder-hex0-x86-stage1.img`` to it, followed
-        by ``kernel-bootstrap/builder-hex0-x86-stage2.hex0``, followed by zeros
+        by ``builder-hex0/builder-hex0-x86-stage2.hex0``, followed by zeros
         padding the disk to the next sector.
       * distfiles can be obtained using ``./download-distfiles.sh``.
       * See the list in part a. For every file within that list, write a line to
