@@ -289,7 +289,9 @@ download_source_line() {
             esac
             mirror_url="${mirror}/${fname}"
             echo "${mirror_url}"
-            curl --fail --retry 3 --location "${mirror_url}" --output "${fname}" || true && break
+            if curl --fail --retry 3 --location "${mirror_url}" --output "${fname}"; then
+                break
+            fi
         done
         if ! [ -e "${fname}" ] && [ "${upstream_url}" != "_" ]; then
             curl --fail --retry 3 --location "${upstream_url}" --output "${fname}" || true
