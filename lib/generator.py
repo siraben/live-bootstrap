@@ -180,7 +180,7 @@ class Generator():
         srcline = f"src {os.path.getsize(filepath)} {filepath}\n"
         srcfs_file.write(srcline.encode())
         with open(filepath, 'rb') as srcfile:
-            srcfs_file.write(srcfile.read())
+            shutil.copyfileobj(srcfile, srcfs_file)
 
     def output_tree(self, srcfs_file, treepath):
         """Add a tree of files to srcfs file system"""
@@ -274,9 +274,12 @@ class Generator():
     @staticmethod
     def check_file(file_name, expected_hash):
         """Check hash of downloaded source file."""
+        readable_hash = hashlib.sha256()
         with open(file_name, "rb") as downloaded_file:
-            downloaded_content = downloaded_file.read() # read entire file as bytes
-        readable_hash = hashlib.sha256(downloaded_content).hexdigest()
+            # Hash in chunks to avoid holding entire files in memory
+            for chunk in iter(lambda: downloaded_file.read(1024 * 1024), b""):
+                readable_hash.update(chunk)
+        readable_hash = readable_hash.hexdigest()
         if expected_hash == readable_hash:
             return
         raise ValueError(f"Checksum mismatch for file {os.path.basename(file_name)}:\n\
@@ -309,7 +312,7 @@ this script the next time")
                         headers=headers, timeout=20)
                 if response.status_code == 200:
                     with open(abs_file_name, 'wb') as target_file:
-                        target_file.write(response.raw.read())
+                        shutil.copyfileobj(response.raw, target_file)
                     return True
                 print(f"Download failed from {option}: {response.status_code} {response.reason}")
                 return False
