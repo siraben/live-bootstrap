@@ -48,6 +48,10 @@ cp ../files/config.h ${MES_PREFIX}/include/mes
 # This patch was upstreamed after mes 0.27.1
 simple-patch ${MES_PREFIX}/lib/linux/wait4.c \
     ../simple-patches/wait4.before ../simple-patches/wait4.after
+simple-patch ${MES_PREFIX}/src/gc.c ../simple-patches/gc.c.before ../simple-patches/gc.c.after
+simple-patch ${MES_PREFIX}/src/eval-apply.c ../simple-patches/eval-apply.c.before ../simple-patches/eval-apply.c.after
+simple-patch ${MES_PREFIX}/src/struct.c ../simple-patches/struct.c.before ../simple-patches/struct.c.after
+simple-patch ${MES_PREFIX}/include/mes/mes.h ../simple-patches/mes.h.before ../simple-patches/mes.h.after
 
 cd ${MES_PREFIX}
 mkdir include/arch
