@@ -33,8 +33,8 @@ class Generator():
         self.external_sources = external_sources
         self.repo_path = repo_path
         self.mirrors = mirrors
-        self.source_manifest = self.get_source_manifest(not self.external_sources)
-        self.early_source_manifest = self.get_source_manifest(True)
+        self.source_manifest, self.early_source_manifest = \
+            self.get_source_manifests(not self.external_sources)
         self.target_dir = None
         self.external_dir = None
 
@@ -348,14 +348,44 @@ this script the next time")
         """
         Generate a source manifest for the system.
         """
-        entries = []
+        return cls.get_source_manifests(pre_network)[0]
+
+    @staticmethod
+    def parse_source_line(source, directory):
+        """Parse one line of a step sources file into a manifest entry."""
+        source = source.strip().split(" ")
+
+        if source[0] == "g" or source[0] == "git":
+            source[1:] = source[2:]
+
+        if len(source) > 3:
+            file_name = source[3]
+        else:
+            # Automatically determine file name based on URL.
+            file_name = os.path.basename(source[1])
+
+        return (source[2], directory, source[1], file_name)
+
+    @classmethod
+    def get_source_manifests(cls, pre_network=False):
+        """
+        Generate both the complete and the pre-network source manifests in a
+        single pass over the manifest.
+        """
+        entries = {}
+        early_entries = {}
+        network_reached = False
         directory = os.path.relpath(cls.distfiles_dir, cls.git_dir)
 
         # Find all source files
         steps_dir = os.path.join(cls.git_dir, 'steps')
         with open(os.path.join(steps_dir, 'manifest'), 'r', encoding="utf_8") as file:
             for line in file:
-                if pre_network and line.strip().startswith("improve: ") and "network" in line:
+                if (not network_reached and line.strip().startswith("improve: ")
+                        and "network" in line):
+                    network_reached = True
+                if pre_network and network_reached:
+                    # No further entries can be added to either manifest.
                     break
 
                 if not line.strip().startswith("build: "):
@@ -363,26 +393,17 @@ this script the next time")
 
                 step = line.split(" ")[1].split("#")[0].strip()
                 sourcef = os.path.join(steps_dir, step, "sources")
-                if os.path.exists(sourcef):
-                    # Read sources from the source file
-                    with open(sourcef, "r", encoding="utf_8") as sources:
-                        for source in sources.readlines():
-                            source = source.strip().split(" ")
+                if not os.path.exists(sourcef):
+                    continue
+                # Read sources from the source file
+                with open(sourcef, "r", encoding="utf_8") as sources:
+                    for source in sources.readlines():
+                        entry = cls.parse_source_line(source, directory)
+                        if not network_reached:
+                            early_entries[entry] = None
+                        entries[entry] = None
 
-                            if source[0] == "g" or source[0] == "git":
-                                source[1:] = source[2:]
-
-                            if len(source) > 3:
-                                file_name = source[3]
-                            else:
-                                # Automatically determine file name based on URL.
-                                file_name = os.path.basename(source[1])
-
-                            entry = (source[2], directory, source[1], file_name)
-                            if entry not in entries:
-                                entries.append(entry)
-
-        return entries
+        return list(entries), list(early_entries)
 
 stage0_arch_map = {
     "amd64": "AMD64",
