@@ -1,0 +1,6 @@
+	  (let* ((pr (prule-range symb))
+	         (following (and (pair? pr) (first-following item toks))))
+	    (let loop ((seed seed) (pr pr))
+	      (if (null? pr) seed
+		  (loop (merge-la-item seed (first-item (car pr)) following)
+			(range-next pr)))))))))

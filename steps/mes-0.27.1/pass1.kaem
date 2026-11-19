@@ -69,6 +69,8 @@ chmod 755 ${BINDIR}/mes-m2
 
 # Rebuild pregenerated files in nyacc
 cd ../${NYACC_PKG}
+simple-patch module/nyacc/lalr.scm \
+    ../../simple-patches/nyacc-closure.before ../../simple-patches/nyacc-closure.after
 rm module/nyacc/lang/c99/mach.d/c99-act.scm module/nyacc/lang/c99/mach.d/c99-tab.scm \
     module/nyacc/lang/c99/mach.d/c99cx-act.scm module/nyacc/lang/c99/mach.d/c99cx-tab.scm \
     module/nyacc/lang/c99/mach.d/c99x-act.scm module/nyacc/lang/c99/mach.d/c99x-tab.scm \
