@@ -1,0 +1,28 @@
+(define-record-type lalr-core-type
+  (make-lalr-core non-terms terminals lhs-v rhs-v eps-l)
+  lalr-core-type?
+  (non-terms core-non-terms)	      ; list of non-terminals
+  (terminals core-terminals)	      ; list of non-terminals
+  (lhs-v core-lhs-v)		      ; vec of left hand sides
+  (rhs-v core-rhs-v)		      ; vec of right hand sides
+  (eps-l core-eps-l))		      ; non-terms w/ eps prod's
+
+;; @deffn {Procedure} make-core spec => lalr-core-type
+;; @end deffn
+(define (make-core spec)
+  (make-lalr-core (assq-ref spec 'non-terms)
+		  (assq-ref spec 'terminals)
+		  (assq-ref spec 'lhs-v)
+		  (assq-ref spec 'rhs-v)
+		  '()))
+
+;; @deffn {Procedure} make-core/extras spec => lalr-core-type
+;; Add list of symbols with epsilon productions.
+;; @end deffn
+(define (make-core/extras spec)
+  (let ((non-terms (assq-ref spec 'non-terms))
+	(terminals (assq-ref spec 'terminals))
+	(lhs-v (assq-ref spec 'lhs-v))
+	(rhs-v (assq-ref spec 'rhs-v)))
+    (make-lalr-core non-terms terminals lhs-v rhs-v
+		    (find-eps non-terms lhs-v rhs-v))))

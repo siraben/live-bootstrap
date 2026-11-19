@@ -1,0 +1,21 @@
+(define (prule-range lhs)
+  ;; If this needs to be really fast then we move to where lhs is an integer
+  ;; and that used to index into a table that provides the ranges.
+  (let* ((core (fluid-ref *lalr-core*))
+	 (lhs-v (core-lhs-v core))
+	 (n (vector-length lhs-v))
+	 (match? (lambda (ix symb) (eqv? (vector-ref lhs-v ix) symb))))
+    (cond
+     ((terminal? lhs) '())
+     ((eq? lhs '$epsilon) '())
+     (else
+      (let loop-st ((st 0))
+	;; Iterate to find the start index.
+	(if (= st n) '()		; not found
+	    (if (match? st lhs)
+		;; Start found, now iteratate to find end index.
+		(let loop-nd ((nd st))
+		  (if (= nd n) (cons st nd)
+		      (if (not (match? nd lhs)) (cons st nd)
+			  (loop-nd (1+ nd)))))
+		(loop-st (1+ st)))))))))

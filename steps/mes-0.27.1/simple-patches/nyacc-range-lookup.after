@@ -1,0 +1,3 @@
+(define (prule-range lhs)
+  (if (or (terminal? lhs) (eqv? lhs '$epsilon)) '()
+      (or (assq-ref (core-ranges (fluid-ref *lalr-core*)) lhs) '())))
